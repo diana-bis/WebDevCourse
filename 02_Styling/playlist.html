@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>**My Music Playlist**</title>
+    <link rel="stylesheet" href="playlist.css" />
+</head>
+
+<body>
+    <header class="site-header">
+        <h1>My Music Playlist</h1>
+    </header>
+
+    <main>
+        <hr class="divider" />
+
+        <div class="table-wrapper">
+            <table class="songs-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Song Name</th>
+                        <th>Year</th>
+                        <th>Image</th>
+                        <th>Video</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Ed Sheeran</td>
+                        <td>Shape of You</td>
+                        <td>2017</td>
+                        <td>
+                            <img src="https://img.youtube.com/vi/JGwWNGJdvx8/hqdefault.jpg"
+                                alt="Ed Sheeran - Shape of You thumbnail" />
+                        </td>
+                        <td>
+                            <div class="video-container click-to-play" data-video-id="JGwWNGJdvx8">
+                                <img class="video-thumb" src="https://img.youtube.com/vi/JGwWNGJdvx8/hqdefault.jpg"
+                                    alt="Ed Sheeran - Shape of You video thumbnail" />
+                                <div class="play-button"></div>
+                            </div>
+                            <iframe class="video-frame hidden" title="Ed Sheeran - Shape of You video player"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowfullscreen>
+                            </iframe>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Adele</td>
+                        <td>Hello</td>
+                        <td>2015</td>
+                        <td>
+                            <img src="https://img.youtube.com/vi/YQHsXMglC9A/hqdefault.jpg"
+                                alt="Adele - Hello thumbnail" />
+                        </td>
+                        <td>
+                            <div class="video-container click-to-play" data-video-id="YQHsXMglC9A">
+                                <img class="video-thumb" src="https://img.youtube.com/vi/YQHsXMglC9A/maxresdefault.jpg"
+                                    alt="Adele - Hello video thumbnail" />
+                                <div class="play-button"></div>
+                            </div>
+                            <iframe class="video-frame hidden" title="Adele - Hello video player" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowfullscreen>
+                            </iframe>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Imagine Dragons</td>
+                        <td>Believer</td>
+                        <td>2017</td>
+                        <td>
+                            <img src="https://img.youtube.com/vi/7wtfhZwyrcc/hqdefault.jpg"
+                                alt="Imagine Dragons - Believer thumbnail" />
+                        </td>
+                        <td>
+                            <div class="video-container click-to-play" data-video-id="7wtfhZwyrcc">
+                                <img class="video-thumb" src="https://img.youtube.com/vi/7wtfhZwyrcc/maxresdefault.jpg"
+                                    alt="Imagine Dragons - Believer video thumbnail" />
+                                <div class="play-button"></div>
+                            </div>
+                            <iframe class="video-frame hidden" title="Imagine Dragons - Believer video player"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowfullscreen>
+                            </iframe>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <hr class="divider" />
+        <p class="footer-text">© 2025 My Music Playlist</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const videoPlaceholders = document.querySelectorAll('.click-to-play');
+
+            videoPlaceholders.forEach(placeholder => {
+                placeholder.addEventListener('click', () => {
+                    const videoId = placeholder.getAttribute('data-video-id');
+                    const iframe = placeholder.nextElementSibling;
+
+                    if (videoId && iframe && iframe.classList.contains('video-frame')) {
+                        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+                        placeholder.classList.add('hidden');
+                        iframe.classList.remove('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
