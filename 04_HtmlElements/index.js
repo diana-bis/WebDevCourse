@@ -10,7 +10,11 @@ let op;
 
 function pageLoaded() {
     txt1 = document.getElementById("txt1");
+    txt1.addEventListener("input", () => validateInput(txt1));
+
     txt2 = document.querySelector('#txt2');
+    txt2.addEventListener("input", () => validateInput(txt2));
+
     btn = document.getElementById("btnCalc");
     lblRes = document.getElementById("lblRes");
     op = document.getElementById("op");
@@ -21,6 +25,14 @@ function pageLoaded() {
 }
 
 function calculate() {
+    const valid1 = validateInput(txt1);
+    const valid2 = validateInput(txt2);
+
+    if (!valid1 || !valid2) {
+        lblRes.innerText = "Input error";
+        return;
+    }
+
     let txt1Text = txt1.value;
     let num1 = parseInt(txt1Text); // convert to num
 
@@ -50,6 +62,20 @@ function calculate() {
 
     // Also write a log entry in the textarea
     print(`${num1} ${operator} ${num2} = ${res}`, true);
+}
+
+function validateInput(inputElement) {
+    const value = inputElement.value.trim();
+
+    if (value == "" || isNaN(value)) {
+        inputElement.classList.remove("is-valid");
+        inputElement.classList.add("is-invalid");
+        return false;
+    } else {
+        inputElement.classList.remove("is-invalid");
+        inputElement.classList.add("is-valid");
+        return true;
+    }
 }
 
 
