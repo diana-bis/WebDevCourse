@@ -6,12 +6,14 @@ let txt1;
 let txt2;
 let btnCalc;
 let lblRes;
+let op;
 
 function pageLoaded() {
     txt1 = document.getElementById("txt1");
     txt2 = document.querySelector('#txt2');
     btn = document.getElementById("btnCalc");
     lblRes = document.getElementById("lblRes");
+    op = document.getElementById("op");
     btn.addEventListener('click', () => {
         calculate();
     });
@@ -25,8 +27,29 @@ function calculate() {
     let txt2Text = txt2.value;
     let num2 = parseInt(txt2Text);
 
-    let res = num1 + num2;
+    let operator = op.value;
+
+    let res;
+    switch (operator) {
+        case "+":
+            res = num1 + num2;
+            break;
+        case "-":
+            res = num1 - num2;
+            break;
+        case "*":
+            res = num1 * num2;
+            break;
+        case "/":
+            res = num2 != 0 ? num1 / num2 : "Error /0";
+            break;
+    }
+
+    // Show result on screen
     lblRes.innerText = res; // converts back to string
+
+    // Also write a log entry in the textarea
+    print(`${num1} ${operator} ${num2} = ${res}`, true);
 }
 
 
@@ -48,12 +71,22 @@ btn2.addEventListener("click", () => {
 // =============================================
 // HELPER: PRINT TO TEXTAREA
 // =============================================
-function print(msg) {
+function print(msg, append) {
     //--Get test area element refrence
     const ta = document.getElementById("output");
     //--write msg to textArea text
-    if (ta) ta.value = msg;
-    else console.log(msg);
+
+    if (!ta) {
+        console.log(msg);
+        return;
+    }
+    if (append) {   //true
+        ta.value += msg + "\n";
+    } else {    //false
+        ta.value = msg;
+    }
+    /*if (ta) ta.value = msg;
+    else console.log(msg); prints to console if no text area*/
 }
 
 // =============================================
