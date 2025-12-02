@@ -19,23 +19,38 @@ form.addEventListener('submit', (e) => {
     e.preventDefault();
 
     //read forms data
+    const id = document.getElementById('songId').value;
     const title = document.getElementById('title').value;
     const url = document.getElementById('url').value;
     const rating = parseInt(document.getElementById('rating').value);
 
     //TODO VALIDATE FIELDS
 
-    //create JSON OBJ based on URL title
-    const song = {
-        id: Date.now(),  // Unique ID
-        title: title,
-        url: url,
-        rating: rating,
-        dateAdded: Date.now()
-    };
-
-
-    songs.push(song);
+    // If clicked submit for editing
+    if (id) {
+        const index = songs.findIndex(s => s.id == id);
+        if (index !== -1) {
+            // update fileds
+            songs[index].title = title;
+            songs[index].url = url;
+            songs[index].rating = rating;
+        }
+        // Returns the form button back to add mode
+        submitBtn.innerHTML = '<i class="fas fa-plus"></i> Add';
+        submitBtn.classList.remove('btn-primary');
+        submitBtn.classList.add('btn-success');
+        document.getElementById('songId').value = '';
+    } else {
+        //create JSON OBJ based on URL title
+        const song = {
+            id: Date.now(),  // Unique ID
+            title: title,
+            url: url,
+            rating: rating,
+            dateAdded: Date.now()
+        };
+        songs.push(song);
+    }
 
     //TO DO SAVE  AND RERENDER 
     saveAndRender();
@@ -85,3 +100,20 @@ function deleteSong(id) {
         saveAndRender();
     }
 }
+
+function editSong(id) {
+    const song = songs.find(s => s.id === id);
+    if (!song) return;
+
+    // loads the song’s info into the form fields
+    document.getElementById('songId').value = song.id;
+    document.getElementById('title').value = song.title;
+    document.getElementById('url').value = song.url;
+    document.getElementById('rating').value = song.rating;
+
+    // changes button to update
+    submitBtn.innerHTML = '<i class="fas fa-save"></i> Update';
+    submitBtn.classList.remove('btn-success');  // green button for add
+    submitBtn.classList.add('btn-primary');     // blue button for edit
+}
+
