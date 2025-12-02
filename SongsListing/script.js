@@ -9,6 +9,26 @@ document.addEventListener('DOMContentLoaded', () => {
     renderSongs();
 });
 
+// Sort Event for radio buttons
+document.querySelectorAll('input[name="sortOption"]').forEach(radio => {
+    radio.addEventListener('change', (e) => {
+        const sortBy = e.target.value;
+
+        if (sortBy === 'name') {
+            songs.sort((a, b) => a.title.localeCompare(b.title));
+        }
+        else if (sortBy === 'date') {
+            songs.sort((a, b) => b.dateAdded - a.dateAdded);
+        }
+        else if (sortBy === 'rating') {
+            songs.sort((a, b) => b.rating - a.rating);
+        }
+
+        saveAndRender(); // Save to LocalStorage and re-render
+    });
+});
+
+
 //if doesnt exsist in local storage get empty array, else
 //get json text and convert it to object json
 let songs = JSON.parse(localStorage.getItem('playlist')) || [];
