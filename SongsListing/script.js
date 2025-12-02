@@ -116,7 +116,11 @@ function renderSongs() {
         row.innerHTML = `
             <td><img src="${thumb}" alt="thumbnail" class="img-fluid rounded" width="120"></td>
             <td>${song.title}</td>
-            <td><a href="${song.url}" target="_blank" class="text-info">Watch</a></td>
+            <td>
+                <button class="btn btn-outline-info btn-sm" onclick="openPlayer(${song.id})">
+                    <i class="fas fa-play"></i> Play
+                </button>
+            </td>
             <td>${song.rating}/10</td>
             <td class="text-end">
                 <button class="btn btn-sm btn-warning me-2" onclick="editSong(${song.id})">
@@ -196,4 +200,30 @@ async function fetchVideoTitle(videoId) {
     }
 }
 
+function openPlayer(id) {
+    const song = songs.find(s => s.id === id);
+    if (!song) return;
+
+    const videoId = getYouTubeID(song.url);
+    if (!videoId) {
+        alert("Invalid YouTube link");
+        return;
+    }
+
+    // Load video into modal
+    const player = document.getElementById('playerFrame');
+    player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+
+    // Set modal title
+    document.getElementById('playerModalLabel').textContent = song.title;
+
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('playerModal'));
+    modal.show();
+
+    // Stop video when modal closes
+    document.getElementById('playerModal').addEventListener('hidden.bs.modal', () => {
+        player.src = "";
+    });
+}
 
