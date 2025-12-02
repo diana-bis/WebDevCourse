@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 let songs = JSON.parse(localStorage.getItem('playlist')) || [];
 
 //user clicked the add button
-form.addEventListener('submit', (e) => {
+form.addEventListener('submit', async (e) => {
     //dont submit the form to the server yet, let me handle it here
     e.preventDefault();
 
@@ -24,6 +24,22 @@ form.addEventListener('submit', (e) => {
     const url = document.getElementById('url').value;
     const rating = parseInt(document.getElementById('rating').value);
 
+    // add title if nothing was enetered
+    const videoId = getYouTubeID(url);
+    if (!videoId) {
+        alert("Please enter a valid YouTube URL");
+        return;
+    }
+
+    // fetch title automatically if empty
+    let finalTitle = title.trim();
+    if (!finalTitle) {
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Fetching...';
+        const apiTitle = await fetchVideoTitle(videoId);
+        finalTitle = apiTitle || "Unknown Video";
+        submitBtn.innerHTML = '<i class="fas fa-plus"></i> Add';
+    }
+
     //TODO VALIDATE FIELDS
 
     // If clicked submit for editing
@@ -31,7 +47,7 @@ form.addEventListener('submit', (e) => {
         const index = songs.findIndex(s => s.id == id);
         if (index !== -1) {
             // update fileds
-            songs[index].title = title;
+            songs[index].title = finalTitle;
             songs[index].url = url;
             songs[index].rating = rating;
         }
@@ -44,7 +60,7 @@ form.addEventListener('submit', (e) => {
         //create JSON OBJ based on URL title
         const song = {
             id: Date.now(),  // Unique ID
-            title: title,
+            title: finalTitle,
             url: url,
             rating: rating,
             dateAdded: Date.now()
@@ -74,8 +90,11 @@ function renderSongs() {
     songs.forEach(song => {
         // Create table row
         const row = document.createElement('tr');
+        const videoId = getYouTubeID(song.url);
+        const thumb = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '';
 
         row.innerHTML = `
+            <td><img src="${thumb}" alt="thumbnail" class="img-fluid rounded" width="120"></td>
             <td>${song.title}</td>
             <td><a href="${song.url}" target="_blank" class="text-info">Watch</a></td>
             <td>${song.rating}/10</td>
@@ -116,4 +135,45 @@ function editSong(id) {
     submitBtn.classList.remove('btn-success');  // green button for add
     submitBtn.classList.add('btn-primary');     // blue button for edit
 }
+
+function getYouTubeID(url) {
+    try {
+        const u = new URL(url);
+
+        if (u.hostname.includes('youtu.be')) {
+            return u.pathname.slice(1);
+        }
+
+        if (u.searchParams.get('v')) {
+            return u.searchParams.get('v');
+        }
+
+        if (u.pathname.includes('/shorts/')) {
+            return u.pathname.split('/shorts/')[1];
+        }
+
+        if (u.pathname.includes('/embed/')) {
+            return u.pathname.split('/embed/')[1];
+        }
+
+        return null;
+    } catch {
+        return null;
+    }
+}
+
+async function fetchVideoTitle(videoId) {
+    const url = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
+    try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Fetch failed");
+        const data = await res.json();
+        console.log("Title fetched:", data.title);
+        return data.title;
+    } catch (err) {
+        console.error("Title fetch error:", err);
+        return null;
+    }
+}
+
 
