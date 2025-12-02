@@ -4,8 +4,18 @@
 const form = document.getElementById('songForm');
 const list = document.getElementById('songList');
 const submitBtn = document.getElementById('submitBtn');
+// View mode
+const cardGrid = document.getElementById('cardGrid');
+const toggleViewBtn = document.getElementById('toggleViewBtn');
+const toggleIcon = document.getElementById('toggleIcon');
+
+//if doesnt exsist in local storage get empty array, else
+//get json text and convert it to object json
+let songs = JSON.parse(localStorage.getItem('playlist')) || [];
+let viewMode = localStorage.getItem('viewMode') || 'table';
 
 document.addEventListener('DOMContentLoaded', () => {
+    updateViewVisibility();
     renderSongs();
 });
 
@@ -28,10 +38,27 @@ document.querySelectorAll('input[name="sortOption"]').forEach(radio => {
     });
 });
 
+toggleViewBtn.addEventListener('click', () => {
+    viewMode = (viewMode === 'table') ? 'cards' : 'table';
+    localStorage.setItem('viewMode', viewMode);
+    updateViewVisibility();
+    renderSongs();
+});
 
-//if doesnt exsist in local storage get empty array, else
-//get json text and convert it to object json
-let songs = JSON.parse(localStorage.getItem('playlist')) || [];
+function updateViewVisibility() {
+    if (viewMode === 'table') {
+        document.querySelector('table').classList.remove('d-none');
+        cardGrid.classList.add('d-none');
+        toggleIcon.classList.remove('fa-grip');
+        toggleIcon.classList.add('fa-list');
+    } else {
+        document.querySelector('table').classList.add('d-none');
+        cardGrid.classList.remove('d-none');
+        toggleIcon.classList.remove('fa-list');
+        toggleIcon.classList.add('fa-grip');
+    }
+}
+
 
 //user clicked the add button
 form.addEventListener('submit', async (e) => {
@@ -106,13 +133,15 @@ function saveAndRender() {
 
 function renderSongs() {
     list.innerHTML = ''; // Clear current list
+    cardGrid.innerHTML = '';
 
     songs.forEach(song => {
-        // Create table row
-        const row = document.createElement('tr');
+
         const videoId = getYouTubeID(song.url);
         const thumb = videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : '';
 
+        // Table view
+        const row = document.createElement('tr');   // Create table row
         row.innerHTML = `
             <td><img src="${thumb}" alt="thumbnail" class="img-fluid rounded" width="120"></td>
             <td>${song.title}</td>
@@ -132,6 +161,30 @@ function renderSongs() {
             </td>
         `;
         list.appendChild(row);
+
+        // Card view
+        const col = document.createElement('div');
+        col.className = 'col';
+        col.innerHTML = `
+            <div class="card h-100 border-primary text-center">
+                <img src="${thumb}" class="card-img-top" alt="${song.title}">
+                <div class="card-body">
+                    <h5 class="card-title">${song.title}</h5>
+                    <p class="card-text">Rating: ${song.rating}/10</p>
+                    <button class="btn btn-outline-info btn-sm" onclick="openPlayer(${song.id})">
+                        <i class="fas fa-play"></i> Play
+                    </button>
+                </div>
+                <div class="card-footer d-flex justify-content-end gap-2">
+                    <button class="btn btn-sm btn-warning" onclick="editSong(${song.id})">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteSong(${song.id})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>`;
+        cardGrid.appendChild(col);
     });
 }
 
