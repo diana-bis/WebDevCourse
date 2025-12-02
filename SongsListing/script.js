@@ -22,21 +22,20 @@ document.addEventListener('DOMContentLoaded', () => {
 // Sort Event for radio buttons
 document.querySelectorAll('input[name="sortOption"]').forEach(radio => {
     radio.addEventListener('change', (e) => {
-        const sortBy = e.target.value;
-
-        if (sortBy === 'name') {
-            songs.sort((a, b) => a.title.localeCompare(b.title));
-        }
-        else if (sortBy === 'date') {
-            songs.sort((a, b) => b.dateAdded - a.dateAdded);
-        }
-        else if (sortBy === 'rating') {
-            songs.sort((a, b) => b.rating - a.rating);
-        }
-
+        sortSongs(e.target.value);
         saveAndRender(); // Save to LocalStorage and re-render
     });
 });
+
+function sortSongs(sortBy) {
+    if (sortBy === 'name') {
+        songs.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (sortBy === 'date') {
+        songs.sort((a, b) => b.dateAdded - a.dateAdded);
+    } else if (sortBy === 'rating') {
+        songs.sort((a, b) => b.rating - a.rating);
+    }
+}
 
 toggleViewBtn.addEventListener('click', () => {
     viewMode = (viewMode === 'table') ? 'cards' : 'table';
@@ -126,8 +125,11 @@ function saveAndRender() {
 
     localStorage.setItem('playlist', JSON.stringify(songs));
     //TODO RELOAD UI
+    const selectedSort = document.querySelector('input[name="sortOption"]:checked');
+    if (selectedSort) {
+        sortSongs(selectedSort.value); // Reuse same logic here
+    }
     renderSongs();
-
 }
 
 
