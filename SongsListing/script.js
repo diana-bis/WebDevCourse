@@ -5,6 +5,10 @@ const form = document.getElementById('songForm');
 const list = document.getElementById('songList');
 const submitBtn = document.getElementById('submitBtn');
 
+document.addEventListener('DOMContentLoaded', () => {
+    renderSongs();
+});
+
 //if doesnt exsist in local storage get empty array, else
 //get json text and convert it to object json
 let songs = JSON.parse(localStorage.getItem('playlist')) || [];
@@ -17,6 +21,7 @@ form.addEventListener('submit', (e) => {
     //read forms data
     const title = document.getElementById('title').value;
     const url = document.getElementById('url').value;
+    const rating = parseInt(document.getElementById('rating').value);
 
     //TODO VALIDATE FIELDS
 
@@ -25,6 +30,7 @@ form.addEventListener('submit', (e) => {
         id: Date.now(),  // Unique ID
         title: title,
         url: url,
+        rating: rating,
         dateAdded: Date.now()
     };
 
@@ -57,6 +63,7 @@ function renderSongs() {
         row.innerHTML = `
             <td>${song.title}</td>
             <td><a href="${song.url}" target="_blank" class="text-info">Watch</a></td>
+            <td>${song.rating}/10</td>
             <td class="text-end">
                 <button class="btn btn-sm btn-warning me-2" onclick="editSong(${song.id})">
                     <i class="fas fa-edit"></i>

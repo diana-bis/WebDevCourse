@@ -10,18 +10,22 @@
 
 <body class="p-4">
     <div class="container">
-        <h1 class="text-center text-primary mb-4">🎵 Excercise Songs List</h1>
+        <h1 class="text-center text-primary mb-4">🎵 Diana Bistrik - Excercise Songs List</h1>
 
         <div class="card border-primary mb-4">
             <div class="card-body">
                 <form id="songForm" class="row g-2">
                     <input type="hidden" id="songId">
 
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <input type="text" id="title" class="form-control" placeholder="Song Title" required>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-4">
                         <input type="url" id="url" class="form-control" placeholder="YouTube URL" required>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" id="rating" class="form-control" placeholder="Rating (1-10)" min="1"
+                            max="10" required>
                     </div>
                     <div class="col-md-2">
                         <button type="submit" id="submitBtn" class="btn btn-success w-100">
@@ -45,6 +49,7 @@
                 <tr>
                     <th>Title</th>
                     <th>Link</th>
+                    <th>Rating</th>
                     <th class="text-end">Actions</th>
                 </tr>
             </thead>
