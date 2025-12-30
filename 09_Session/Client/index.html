@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <h2>Session Demo</h2>
+    <input type="text" id="username" placeholder="Enter Name">
+    <button onclick="login()">Login (Start Session)</button>
+    <button onclick="check()">Check Dashboard</button>
+    <button onclick="logout()">Logout</button>
+
+    <p id="output">...</p>
+
+    <script>
+        const API = 'http://127.0.0.1:3001';
+
+        // IMPORTANT: 'credentials: include' is still needed to send the Session ID Cookie!
+        const fetchSession = (url) => fetch(url, { method: 'GET', credentials: 'include' });
+
+        async function login() {
+            const name = document.getElementById('username').value;
+            const res = await fetchSession(`${API}/login/${name}`);
+            document.getElementById('output').innerText = await res.text();
+        }
+
+        async function check() {
+            const res = await fetchSession(`${API}/dashboard`);
+            document.getElementById('output').innerText = await res.text();
+        }
+
+        async function logout() {
+            const res = await fetchSession(`${API}/logout`);
+            document.getElementById('output').innerText = await res.text();
+        }
+    </script>
+</body>
+
+</html>

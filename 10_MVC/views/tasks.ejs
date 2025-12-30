@@ -1,0 +1,15 @@
+<h1>Tasks</h1>
+
+<ul>
+    <% tasks.forEach(t=> { %>
+        <li>
+            <%= t.title %>
+                <% if (t.completed) { %> ✅ <% } %>
+        </li>
+        <% }) %>
+</ul>
+
+<form method="POST">
+    <input name="title" placeholder="New task" required />
+    <button>Add</button>
+</form>
