@@ -10,4 +10,4 @@ class Task {
     }
 }
 
-module.exports = Task;  
+module.exports = Task;  // When someone requires this file, give them the Task class
