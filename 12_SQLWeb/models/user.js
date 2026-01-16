@@ -1,4 +1,4 @@
-// whats returned from db will go into user
+// data from db will be returned in this format
 class User {
     constructor({ id, email, fullName, passwordHash, createdAt }) {
         this.id = id;

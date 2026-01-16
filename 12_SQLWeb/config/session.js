@@ -1,3 +1,4 @@
+// keeps list of session users in the db seperetly - session table
 const session = require("express-session");
 const SQLiteStore = require("connect-sqlite3")(session);
 const path = require("path");

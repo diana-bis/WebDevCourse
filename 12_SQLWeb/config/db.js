@@ -5,7 +5,8 @@ const dbPath = path.join(__dirname, "..", "db.sqlite");
 const db = new sqlite3.Database(dbPath);
 
 db.serialize(() => {
-    db.run(`
+  // SQL syntax
+  db.run(`
     CREATE TABLE IF NOT EXISTS Users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       email TEXT UNIQUE NOT NULL,

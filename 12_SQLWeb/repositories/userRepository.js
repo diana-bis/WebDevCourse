@@ -1,4 +1,4 @@
-// service for db
+// service for db - works only wih db
 const db = require("../config/db");
 const User = require("../models/user");
 

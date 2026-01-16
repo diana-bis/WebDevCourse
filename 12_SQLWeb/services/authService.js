@@ -1,3 +1,4 @@
+// the work with the controller 
 const bcrypt = require("bcrypt");
 const userRepo = require("../repositories/userRepository");
 
@@ -9,7 +10,7 @@ class AuthService {
         }
 
         const passwordHash = await bcrypt.hash(password, 12);
-        const user = await userRepo.create({ email, fullName, passwordHash });
+        const user = await userRepo.create({ email, fullName, passwordHash }); // create new user in db using func from userRepo that works with db
         return user;
     }
 
